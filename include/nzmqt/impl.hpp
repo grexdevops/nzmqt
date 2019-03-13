@@ -526,7 +526,8 @@ NZMQT_INLINE PollingZMQSocket* PollingZMQContext::createSocketInternal(ZMQSocket
 
 NZMQT_INLINE void PollingZMQContext::registerSocket(ZMQSocket* socket_)
 {
-    pollitem_t pollItem = { *socket_, 0, ZMQSocket::EVT_POLLIN, 0 };
+    zmq::pollitem_t pollItem = {static_cast<void *>(*socket_), 0, ZMQSocket::EVT_POLLIN, 0};
+    //pollitem_t pollItem = { *socket_, 0, ZMQSocket::EVT_POLLIN, 0 };
 
     QMutexLocker lock(&m_pollItemsMutex);
 
