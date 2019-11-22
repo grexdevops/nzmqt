@@ -425,6 +425,7 @@ namespace nzmqt
 
     public:
         PollingZMQContext(QObject* parent_ = nullptr, int io_threads_ = NZMQT_DEFAULT_IOTHREADS);
+        ~PollingZMQContext() override {}
 
         // Sets the polling interval.
         // Note that the interval does not denote the time the zmq::poll() function will
