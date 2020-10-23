@@ -415,6 +415,7 @@ namespace nzmqt
 
     protected:
         PollingZMQSocket(PollingZMQContext* context_, Type type_);
+        ~PollingZMQSocket() {}
     };
 
     class NZMQT_API PollingZMQContext : public ZMQContext, public QRunnable
@@ -425,7 +426,7 @@ namespace nzmqt
 
     public:
         PollingZMQContext(QObject* parent_ = nullptr, int io_threads_ = NZMQT_DEFAULT_IOTHREADS);
-        ~PollingZMQContext() override {}
+        ~PollingZMQContext() {}
 
         // Sets the polling interval.
         // Note that the interval does not denote the time the zmq::poll() function will
@@ -448,7 +449,7 @@ namespace nzmqt
         // If the polling process is not stopped (by a previous call to the 'stop()' method) this
         // method will call the 'poll()' method once and re-schedule a subsequent call to this method
         // using the current polling interval.
-        void run();
+        void run() override;
 
         // This method will poll on all currently available poll-items (known ZMQ sockets)
         // using the given timeout to wait for incoming messages. Note that this timeout has
@@ -463,6 +464,7 @@ namespace nzmqt
         void pollError(int errorNum, const QString& errorMsg);
 
     protected:
+        void dummyMethod() {} //without this, the vtable is not placed in the library and causes compile issues downstream.
         PollingZMQSocket* createSocketInternal(ZMQSocket::Type type_) override;
 
         // Add the given socket to list list of poll-items.
@@ -535,7 +537,7 @@ namespace nzmqt
         void notifierError(int errorNum, const QString& errorMsg);
 
     protected:
-        SocketNotifierZMQSocket* createSocketInternal(ZMQSocket::Type type_);
+        SocketNotifierZMQSocket* createSocketInternal(ZMQSocket::Type type_) override;
     };
 
     NZMQT_API inline ZMQContext* createDefaultContext(QObject* parent_ = nullptr, int io_threads_ = NZMQT_DEFAULT_IOTHREADS)
